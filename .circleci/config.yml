@@ -1,0 +1,44 @@
+version: 2.1
+jobs:
+  build:
+    docker:
+      - image: python:3.6
+    steps:
+      - checkout
+      - run:
+          command: |
+            pip install -r requirements.txt
+            python manage.py check
+  test:
+    docker:
+      - image: python:3.6
+    steps:
+      - checkout
+      - run:
+          command: |
+            pip install -r requirements.txt
+            python manage.py test taskManager
+  integration:
+    docker:
+      - image: python:3.6
+    steps:
+      - checkout
+      - run:
+          command: |
+            echo "This is an integration step"
+            # Removed 'exit 1' to prevent intentional failure
+  prod:
+    docker:
+      - image: python:3.6
+    steps:
+      - checkout
+      - run:
+          command: echo "This is a deploy step"
+workflows:
+  version: 2
+  django:
+    jobs:
+      - build
+      - test
+      - integration
+      - prod
